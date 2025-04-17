@@ -11,52 +11,37 @@
 <body>
 <h1>Accueil</h1>
 <h2>Laissez-nous un message</h2>
-<?php
-// si on a bien envoyé un message
-if(isset($thanks)):
-?>
-    <h4 class="thanks"><?=$thanks?></h4>
-<?php
-endif;
-// si on a une erreur lors de l'insertion
-if(isset($error)):
-?>
-<h4 class="error"><?=$error?></h4>
-<?php
-    endif; ?>
-<form action="" method="post">
-    <label for="name">Nom</label>
-    <input type="text" name="name" id="name" required>
+
+<form action="" method="POST">
+    <label for="name2">Nom</label>
+    <input type="text" name="name" id="name2" required>
     <label for="email">Email</label>
     <input type="email" name="email" id="email" required>
     <label for="message">Message</label>
     <textarea name="message" id="message" rows="10" required></textarea>
     <button type="submit">Envoyer</button>
 </form>
-
 <?php
-
-// si on a pas de message (tableau vide)
-if(empty($messages)):
+// si on a pas de message
+if(is_string($messages)):
 ?>
+<h2><?=$messages?></h2>
+<div class="nomessages">
 
-<div class="nomessage">
-    <h2>Pas de message</h2>
-    <p>Veuillez consulter cette page plus tard</p>
+    <h3><?=$messages?>, veuillez revenir plus tard</h3>
+
 </div>
 <?php
-// le tableau n'est pas vide
+// sinon (on au moins un message)
 else:
-    // on va ajouter une variable pour le 's' de message
-    // si nécessaire pour le h2 suivant
-    $pluriel = $nbTotMessage>1 ? "s" : "";
+    // on compte le nombre de message
+    $countMessage = count($messages);
+    // on ajoute un s à message si on a plus d'un message
+    $pluriel = ($countMessage>1)? "s":"";
 ?>
-
+<h2>Il y a <?=$countMessage?> message<?=$pluriel?></h2>
 <div class="messages">
-    <h2>Il y a <?=$nbTotMessage?> message<?=$pluriel?></h2>
     <?php
-    echo "<hr>$pagination";
-    // tant qu'on a des messages
     foreach ($messages as $message):
     ?>
     <h3><?=$message['name']?></h3>
@@ -65,16 +50,14 @@ else:
     <hr>
     <?php
     endforeach;
-
     ?>
 
 </div>
 <?php
-// fin du if
 endif;
-echo "$pagination<hr>";
-
-var_dump($_GET,$_POST,$db,$page,$nbTotMessage,$pagination);
+?>
+<?php
+var_dump($_POST);
 ?>
 </body>
 </html>
