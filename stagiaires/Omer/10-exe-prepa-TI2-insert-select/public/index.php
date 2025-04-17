@@ -8,7 +8,7 @@
 # chargement des constantes de connexion en mode prod
 require_once "../config.php";
 # chargement du modèle (fonctions)
-require_once "../model/MessagesModel.php";
+
 
 # connexion à PDO
 try {
@@ -30,26 +30,17 @@ try {
     die("Code : {$e->getCode()} <br> Message : {$e->getMessage()}");
 }
 
+
 # ici notre code de traitement de la page
 
-// si on a envoyé le formulaire
-if (isset($_POST['name'], $_POST['email'], $_POST['message'])) {
+// si on a envoyé le formulaire avec les bons champs
 
-    // tentative d'insertion
-    $insert = addNewMessages($db, $_POST['name'], $_POST['email'], $_POST['message']);
-    // ça a fonctionné
-    if ($insert === true) {
-        header("Location: ./");
-        exit();
-    } else {
-        $error = $insert;
-    }
-}
+
+// on veut récupérer tous les messages de la table `article` par date DESC
 
 
 
-# chargement de tous nos articles
-$articles = getAllMessagesByDateDesc($db);
+
 
 
 # chargement de la vue
@@ -57,4 +48,3 @@ require_once "../view/homepage.view.php";
 
 # bonne pratique
 # fermeture de connexion
-$db = null;

@@ -18,7 +18,7 @@ function getAllMessagesByDateDesc(PDO $con): array
         );
         return $query->fetchAll();
 
-    }catch(Exception $e){
+    } catch (Exception $e) {
         die($e->getMessage());
     }
 }
@@ -29,29 +29,35 @@ function getAllMessagesByDateDesc(PDO $con): array
 function addNewMessages(PDO $con, string $name, string $email, string $message): bool|string
 {
     // si on a une ou des erreurs, on les mettra dans cette variable
-    $error="";
+    $error = "";
     // traîtement des variables
     # name
     $nameInsert = strip_tags($name); # retire les balises
-    $nameInsert = htmlspecialchars($nameInsert,ENT_QUOTES); # conversion des caractères en entités html
+    $nameInsert = htmlspecialchars($nameInsert, ENT_QUOTES); # conversion des caractères en entités html
     $nameInsert = trim($nameInsert); # on retire les espaces avant et arrière
 
     # mail
-    $emailInsert = filter_var($email,FILTER_VALIDATE_EMAIL); # garde l'email si juste, envoie false si non correcte
+    $emailInsert = filter_var($email, FILTER_VALIDATE_EMAIL); # garde l'email si juste, envoie false si non correcte
 
     #message
-    $messageInsert = trim(htmlspecialchars(strip_tags($message),ENT_QUOTES));
+    $messageInsert = trim(htmlspecialchars(strip_tags($message), ENT_QUOTES));
 
     // vérification des champs
     #
-    if(empty($nameInsert)) $error .="Nom incorrect<br>";
-    if(strlen($nameInsert)>100) $error .= "Nom trop long !<br>";
-    if($emailInsert===false) $error .="Email non valide";
-    if(empty($messageInsert)) $error .="Message incorrect<br>";
-    if(strlen($messageInsert)>600) $error .= "Message trop long !<br>";
+    if (empty($nameInsert))
+        $error .= "Nom incorrect<br>";
+    if (strlen($nameInsert) > 100)
+        $error .= "Nom trop long !<br>";
+    if ($emailInsert === false)
+        $error .= "Email non valide";
+    if (empty($messageInsert))
+        $error .= "Message incorrect<br>";
+    if (strlen($messageInsert) > 600)
+        $error .= "Message trop long !<br>";
 
     # si on a une erreur, on sort et on envoie les erreurs
-    if(!empty($error)) return $error;
+    if (!empty($error))
+        return $error;
 
     # sinon, on prépare la requête
     $prepare = $con->prepare(
@@ -60,10 +66,10 @@ function addNewMessages(PDO $con, string $name, string $email, string $message):
                 VALUES (?,?,?);"
     );
     # Exécution de la requête
-    try{
-        $prepare->execute([$nameInsert,$emailInsert,$messageInsert]);
+    try {
+        $prepare->execute([$nameInsert, $emailInsert, $messageInsert]);
         return true;
-    }catch (Exception $e){
+    } catch (Exception $e) {
         die($e->getMessage());
     }
 
